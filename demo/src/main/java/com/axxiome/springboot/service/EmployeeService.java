@@ -67,5 +67,40 @@ public class EmployeeService {
 	public Employee createEmployee(Employee employee) {
 		return employeeRepository.save(employee);
 	}
+	
+	public Employee putEmployee(Long id, Employee employee) {
+		return employeeRepository.save(employee);
+	}
+	
+	public Employee patchEmployee(Long id,Employee employee) {
+		Optional<Employee> employeeTemp = employeeRepository.findById(id);
+
+		if (employeeTemp.isPresent()) {
+			if(employee.getName() != null) {
+				employeeTemp.get().setName(employee.getName());
+			}
+			
+			if(employee.getPosition() != null) {
+				employeeTemp.get().setPosition(employee.getPosition());
+			}
+			
+			employeeTemp.get().setSalary(employee.getSalary());
+			
+			return employeeRepository.save(employeeTemp.get());
+		} else {
+			throw new ResourceNotFoundException("We couldn't find the employee");
+		}
+		
+	}
+	
+	public void deleteEmployeeById(Long id) throws ResourceNotFoundException {
+		Optional<Employee> employee = employeeRepository.findById(id);
+
+		if (employee.isPresent()) {
+			 employeeRepository.deleteById(id);
+		} else {
+			throw new ResourceNotFoundException("We couldn't find the employee");
+		}
+	}
 
 }
